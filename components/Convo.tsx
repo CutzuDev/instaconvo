@@ -8,17 +8,19 @@ type Message = {
 function Convo() {
   const [menu, setmenu] = useState(false);
   const [image, setimage] = useState(
-    "https://cdn.discordapp.com/avatars/833033446980714526/99bfc6e1291b1b43d19e19bc7bd9b3b7.png"
+    "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
   );
+  const [imageLink, setimageLink] = useState("");
   const [messageText, setmessageText] = useState("");
   const [messageList, setmessageList] = useState<Message[]>([]);
 
   function handleMessageText(event: React.ChangeEvent<HTMLInputElement>) {
     setmessageText(event.target.value);
   }
-  function handleImageChange(event: React.ChangeEvent<HTMLInputElement>) {
-    setimage(event.target.value);
-  }
+
+  useEffect(() => {
+    setmessageList([{ text: "asdasdasdas", fromwho: false }]);
+  }, []);
 
   return (
     <div className="min-h-screen relative p-5 text-white bg-black w-full max-w-[400px]">
@@ -107,8 +109,78 @@ function Convo() {
             }
             return <TextOther text={item.text} imageShow={false} />;
           }
+
           return <TextMe text={item.text} />;
         })}
+      </div>
+      <div className="absolute bottom-0 p-3 left-0 w-full h-[4.5rem] flex items-center justify-center ">
+        <div
+          onClick={() => setmenu(!menu)}
+          className="flex-1 flex justify-between items-center rounded-full h-full p-1 border border-white border-opacity-25"
+        >
+          <div className="flex items-center justify-center gap-2">
+            <div className="bg-gradient-to-tr from-blue-500 to-blue-400 p-2 w-fit rounded-full">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                className="w-5 h-5"
+              >
+                <path d="M12 9a3.75 3.75 0 100 7.5A3.75 3.75 0 0012 9z" />
+                <path
+                  fillRule="evenodd"
+                  d="M9.344 3.071a49.52 49.52 0 015.312 0c.967.052 1.83.585 2.332 1.39l.821 1.317c.24.383.645.643 1.11.71.386.054.77.113 1.152.177 1.432.239 2.429 1.493 2.429 2.909V18a3 3 0 01-3 3h-15a3 3 0 01-3-3V9.574c0-1.416.997-2.67 2.429-2.909.382-.064.766-.123 1.151-.178a1.56 1.56 0 001.11-.71l.822-1.315a2.942 2.942 0 012.332-1.39zM6.75 12.75a5.25 5.25 0 1110.5 0 5.25 5.25 0 01-10.5 0zm12-1.5a.75.75 0 100-1.5.75.75 0 000 1.5z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </div>
+            <span className="tex-xs opacity-70">Message...</span>
+          </div>
+          <div className="flex justify-center items-center gap-3 pr-3">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="w-6 h-6"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z"
+              />
+            </svg>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="w-6 h-6"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"
+              />
+            </svg>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="w-6 h-6"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+          </div>
+        </div>
       </div>
       {/* MENU BELLOW */}
       <div
@@ -134,12 +206,22 @@ function Convo() {
           </svg>
         </div>
         <div className="flex flex-col justify-center items-center gap-5 w-full">
-          <span className="opacity-70">{`Image url (discord cdn)`}</span>
+          <span className="opacity-70">Image url</span>
           <input
             type="text"
-            onChange={handleImageChange}
+            onChange={(event) => setimageLink(event.target.value)}
             className="outline-none bg-neutral-950 p-3 w-full rounded-lg border border-opacity-10 transition-all border-white focus:border-opacity-75"
           />
+          <button
+            onClick={() => {
+              if (imageLink !== "") {
+                setimage(imageLink);
+              }
+            }}
+            className="bg-neutral-950 rounded-lg border border-white border-opacity-10 w-full p-3"
+          >
+            Set Image
+          </button>
         </div>
         <div className="flex flex-col justify-center items-center gap-5 w-full">
           <span className="opacity-70">Message text</span>
@@ -156,11 +238,13 @@ function Convo() {
           <span className="opacity-70">Send as:</span>
           <button
             onClick={() => {
-              setmessageList([
-                ...messageList,
-                { fromwho: false, text: messageText },
-              ]);
-              setmessageText("");
+              if (messageText) {
+                setmessageList([
+                  ...messageList,
+                  { fromwho: false, text: messageText },
+                ]);
+                setmessageText("");
+              }
             }}
             className="bg-neutral-950 rounded-lg border border-white border-opacity-10 w-full p-3"
           >
@@ -168,11 +252,13 @@ function Convo() {
           </button>
           <button
             onClick={() => {
-              setmessageList([
-                ...messageList,
-                { fromwho: true, text: messageText },
-              ]);
-              setmessageText("");
+              if (messageText) {
+                setmessageList([
+                  ...messageList,
+                  { fromwho: true, text: messageText },
+                ]);
+                setmessageText("");
+              }
             }}
             className="bg-neutral-950 rounded-lg border border-white border-opacity-10 w-full p-3"
           >
