@@ -1,14 +1,27 @@
-import { useState } from "react";
-
+import { useEffect, useState } from "react";
+import TextMe from "./TextMe";
+import TextOther from "./TextOther";
+type Message = {
+  text: string;
+  fromwho: boolean;
+};
 function Convo() {
   const [menu, setmenu] = useState(false);
+  const [image, setimage] = useState(
+    "https://cdn.discordapp.com/avatars/833033446980714526/99bfc6e1291b1b43d19e19bc7bd9b3b7.png"
+  );
   const [messageText, setmessageText] = useState("");
+  const [messageList, setmessageList] = useState<Message[]>([]);
+
   function handleMessageText(event: React.ChangeEvent<HTMLInputElement>) {
     setmessageText(event.target.value);
   }
+  function handleImageChange(event: React.ChangeEvent<HTMLInputElement>) {
+    setimage(event.target.value);
+  }
 
   return (
-    <div className="min-h-screen relative p-5 text-white bg-black w-[400px]">
+    <div className="min-h-screen relative p-5 text-white bg-black w-full max-w-[400px]">
       <div className="flex w-full justify-between items-center">
         <div className="flex items-center justify-center">
           <svg
@@ -27,10 +40,7 @@ function Convo() {
             />
           </svg>
           <div className="flex justify-center items-center pl-5 gap-4">
-            <img
-              src="https://cdn.discordapp.com/avatars/833033446980714526/99bfc6e1291b1b43d19e19bc7bd9b3b7.png"
-              className="w-8 h-8 rounded-full"
-            />
+            <img src={image} className="w-8 h-8 rounded-full aspect-square " />
             <div className="flex flex-col justify-center items-start w-[82px]">
               <input
                 maxLength={10}
@@ -85,7 +95,22 @@ function Convo() {
           </svg>
         </div>
       </div>
-
+      <div className="flex mt-5 gap-2 flex-col justify-center items-center">
+        {messageList.map((item, index) => {
+          const nextItem =
+            index < messageList.length - 1 ? messageList[index + 1] : null;
+          if (item.fromwho) {
+            if (!nextItem?.fromwho) {
+              return (
+                <TextOther imageShow={true} imageSrc={image} text={item.text} />
+              );
+            }
+            return <TextOther text={item.text} imageShow={false} />;
+          }
+          return <TextMe text={item.text} />;
+        })}
+      </div>
+      {/* MENU BELLOW */}
       <div
         className={`absolute ${
           menu ? "flex" : "hidden"
@@ -109,6 +134,14 @@ function Convo() {
           </svg>
         </div>
         <div className="flex flex-col justify-center items-center gap-5 w-full">
+          <span className="opacity-70">{`Image url (discord cdn)`}</span>
+          <input
+            type="text"
+            onChange={handleImageChange}
+            className="outline-none bg-neutral-950 p-3 w-full rounded-lg border border-opacity-10 transition-all border-white focus:border-opacity-75"
+          />
+        </div>
+        <div className="flex flex-col justify-center items-center gap-5 w-full">
           <span className="opacity-70">Message text</span>
           <input
             type="text"
@@ -118,12 +151,31 @@ function Convo() {
             className="outline-none bg-neutral-950 p-3 w-full rounded-lg border border-opacity-10 transition-all border-white focus:border-opacity-75"
           />
         </div>
+
         <div className="flex flex-col items-center justify-center w-full gap-5">
           <span className="opacity-70">Send as:</span>
-          <button className="bg-neutral-950 rounded-lg border border-white border-opacity-10 w-full p-3">
+          <button
+            onClick={() => {
+              setmessageList([
+                ...messageList,
+                { fromwho: false, text: messageText },
+              ]);
+              setmessageText("");
+            }}
+            className="bg-neutral-950 rounded-lg border border-white border-opacity-10 w-full p-3"
+          >
             You
           </button>
-          <button className="bg-neutral-950 rounded-lg border border-white border-opacity-10 w-full p-3">
+          <button
+            onClick={() => {
+              setmessageList([
+                ...messageList,
+                { fromwho: true, text: messageText },
+              ]);
+              setmessageText("");
+            }}
+            className="bg-neutral-950 rounded-lg border border-white border-opacity-10 w-full p-3"
+          >
             Other person
           </button>
         </div>
