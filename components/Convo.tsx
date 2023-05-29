@@ -18,9 +18,7 @@ function Convo() {
     setmessageText(event.target.value);
   }
 
-  useEffect(() => {
-    setmessageList([{ text: "asdasdasdas", fromwho: false }]);
-  }, []);
+ 
 
   return (
     <div className="min-h-screen relative p-5 text-white bg-black w-full max-w-[400px]">
@@ -43,9 +41,9 @@ function Convo() {
           </svg>
           <div className="flex justify-center items-center pl-5 gap-4">
             <img src={image} className="w-8 h-8 rounded-full aspect-square " />
-            <div className="flex flex-col justify-center items-start w-[82px]">
+            <div className="flex flex-col justify-center items-start w-28">
               <input
-                maxLength={10}
+                maxLength={14}
                 className="bg-transparent outline-none text-sm w-full"
                 placeholder="Input name"
               />

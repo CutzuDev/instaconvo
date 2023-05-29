@@ -6,9 +6,9 @@ type textProps = {
 
 function TextOther({ text, imageShow, imageSrc }: textProps) {
   return (
-    <div className="w-full flex justify-start gap-4 items-start">
+    <div className="w-full flex justify-start gap-4 items-center">
       {imageShow ? (
-        <img src={imageSrc} className="h-7 w-7 rounded-full" alt="" />
+        <img src={imageSrc} className="h-7 w-7 rounded-3xl" alt="" />
       ) : (
         <div className="h-7 w-7" />
       )}
